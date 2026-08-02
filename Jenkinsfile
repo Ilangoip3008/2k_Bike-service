@@ -21,14 +21,14 @@ pipeline {
         }
 
         stage('Push to Docker Hub') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
-                    bat "echo %PASS% | docker login -u %USER% --password-stdin"
-                    bat "docker tag %DOCKER_IMAGE% %DOCKER_IMAGE%:latest"
-                    bat "docker push %DOCKER_IMAGE%:latest"
-                }
-            }
+    steps {
+        withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
+            bat "docker login -u %USER% -p %PASS%"
+            bat "docker tag %DOCKER_IMAGE% %DOCKER_IMAGE%:latest"
+            bat "docker push %DOCKER_IMAGE%:latest"
         }
+    }
+}
 
         stage('Deploy to EC2') {
             steps {
