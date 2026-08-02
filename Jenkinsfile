@@ -33,11 +33,15 @@ pipeline {
        stage('Deploy to EC2') {
     steps {
         bat '''
-        ssh -i C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\2k-bike-service\\bike-service.pem -o StrictHostKeyChecking=no ubuntu@3.109.209.161 ^
-        "docker pull ilangoip3008/bike-service-app:latest && docker stop bike-service && docker rm bike-service && docker run -d --name bike-service -p 3000:3000 ilangoip3008/bike-service-app:latest"
+        ssh -i C:\\Program Files\\Jenkins\\.ssh\\bike-service-new.pem -o StrictHostKeyChecking=no ubuntu@<new-public-ip> ^
+        "docker pull %DOCKER_IMAGE%:latest && \
+         docker stop bike-service || true && \
+         docker rm bike-service || true && \
+         docker run -d --name bike-service -p 3000:3000 %DOCKER_IMAGE%:latest"
         '''
     }
 }
+
 
 
     }
