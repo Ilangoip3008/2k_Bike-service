@@ -30,18 +30,7 @@ pipeline {
             }
         }
 
-       stage('Deploy to EC2') {
-    steps {
-        bat '''
-        ssh -i "C:\\Program Files\\Jenkins\\.ssh\\bike-service-new.pem" -o StrictHostKeyChecking=no ubuntu@3.109.1.40 ^
-        "docker pull ilangoip3008/bike-service-app:latest && \
-         docker stop bike-service || true && \
-         docker rm bike-service || true && \
-         docker run -d --name bike-service -p 3000:3000 ilangoip3008/bike-service-app:latest"
-        '''
-    }
-}
-
+      
 
 
 
