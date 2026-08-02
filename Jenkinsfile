@@ -8,7 +8,9 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/Ilangoip3008/2k_Bike-service.git'
+                git branch: 'main',
+                    url: 'https://github.com/Ilangoip3008/2k_Bike-service.git',
+                    credentialsId: 'ec2-ssh-key'
             }
         }
 
