@@ -21,26 +21,25 @@ pipeline {
         }
 
         stage('Push to Docker Hub') {
-    steps {
-        withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
-            bat "docker login -u %USER% -p %PASS%"
-            bat "docker tag %DOCKER_IMAGE% %DOCKER_IMAGE%:latest"
-            bat "docker push %DOCKER_IMAGE%:latest"
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
+                    bat "docker login -u %USER% -p %PASS%"
+                    bat "docker tag %DOCKER_IMAGE% %DOCKER_IMAGE%:latest"
+                    bat "docker push %DOCKER_IMAGE%:latest"
+                }
+            }
         }
-    }
-}
 
         stage('Deploy to EC2') {
-    steps {
-        bat '''
-        ssh -i C:\\path\\to\\ec2-ssh-key.pem -o StrictHostKeyChecking=no ubuntu@3.109.209.161 ^
-        "docker pull %DOCKER_IMAGE%:latest && ^
-         docker stop bike-service || true && ^
-         docker rm bike-service || true && ^
-         docker run -d --name bike-service -p 3000:3000 %DOCKER_IMAGE%:latest"
-        '''
-    }
-}
+            steps {
+                bat '''
+                ssh -i C:\\path\\to\\ec2-ssh-key.pem -o StrictHostKeyChecking=no ubuntu@3.109.209.161 ^
+                "docker pull %DOCKER_IMAGE%:latest && ^
+                 docker stop bike-service || true && ^
+                 docker rm bike-service || true && ^
+                 docker run -d --name bike-service -p 3000:3000 %DOCKER_IMAGE%:latest"
+                '''
+            }
         }
     }
 }
