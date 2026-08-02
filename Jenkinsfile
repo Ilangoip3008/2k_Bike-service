@@ -31,17 +31,16 @@ pipeline {
 }
 
         stage('Deploy to EC2') {
-            steps {
-                sshagent(['ec2-ssh-key']) {
-                    bat '''
-                    ssh -o StrictHostKeyChecking=no ubuntu@3.109.209.161 ^
-                    "docker pull %DOCKER_IMAGE%:latest && ^
-                     docker stop bike-service || true && ^
-                     docker rm bike-service || true && ^
-                     docker run -d --name bike-service -p 3000:3000 %DOCKER_IMAGE%:latest"
-                    '''
-                }
-            }
+    steps {
+        bat '''
+        ssh -i C:\\path\\to\\ec2-ssh-key.pem -o StrictHostKeyChecking=no ubuntu@3.109.209.161 ^
+        "docker pull %DOCKER_IMAGE%:latest && ^
+         docker stop bike-service || true && ^
+         docker rm bike-service || true && ^
+         docker run -d --name bike-service -p 3000:3000 %DOCKER_IMAGE%:latest"
+        '''
+    }
+}
         }
     }
 }
