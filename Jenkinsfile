@@ -10,7 +10,7 @@ pipeline {
             steps {
                 git branch: 'main',
                     url: 'https://github.com/Ilangoip3008/2k_Bike-service.git',
-                    credentialsId: 'ec2-ssh-key'
+                    credentialsId: 'github-pat'   // use your PAT ID here
             }
         }
 
@@ -30,9 +30,13 @@ pipeline {
             }
         }
 
-      
-
-
-
+        stage('Deploy') {
+            steps {
+                bat "docker pull %DOCKER_IMAGE%:latest"
+                bat "docker stop bike-service-app || exit 0"
+                bat "docker rm bike-service-app || exit 0"
+                bat "docker run -d -p 3000:3000 --name bike-service-app %DOCKER_IMAGE%:latest"
+            }
+        }
     }
 }
